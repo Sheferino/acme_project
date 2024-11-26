@@ -10,7 +10,9 @@ def birthday(request, pk=None):
         instance = get_object_or_404(Birthday, pk=pk)
     else:
         instance = None
-    form = BirthdayForm(request.POST or None, instance=instance)
+    form = BirthdayForm(request.POST or None,
+                        files=request.FILES or None,
+                        instance=instance)
     # Создаём словарь контекста сразу после инициализации формы.
     context = {'form': form}
     # Если форма валидна...

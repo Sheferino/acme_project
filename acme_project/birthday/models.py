@@ -11,6 +11,8 @@ class Birthday(models.Model):
         verbose_name='Дата рождения',
         validators=(real_age,)
     )
+    image = models.ImageField(blank=True, verbose_name='Фото',
+                              upload_to='birtday_images')
 
     class Meta:
         verbose_name = 'Запись о ДР'

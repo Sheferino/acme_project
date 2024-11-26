@@ -3,19 +3,27 @@
 {% block content %}
 
 {% for birthday_record in birthday_list %}
-  <div>
-    <div>
-      {{birthday_record.first_name}} {{ birthday_record.last_name}}: ДР {{birthday_record.birthday}}
+  <div class="row">
+    <div class="col-2">  
+      {% if birthday_record.image %}
+        <!-- У объекта картинки image есть атрибут url — его и укажем в src -->
+        <img src="{{ birthday_record.image.url }}" height="100">
+      {% endif %}
     </div>
-    <div>
-      <a href="{% url "birthday:edit" birthday_record.id %}"> Изменить </a>
+    <div class="col-10">  
+      <div>
+        {{birthday_record.first_name}} {{ birthday_record.last_name}}: ДР {{birthday_record.birthday}}
+      </div>
+      <div>
+        <a href="{% url "birthday:edit" birthday_record.id %}"> Изменить </a>
+      </div>
+      <div>
+        <a href="{% url "birthday:delete" birthday_record.id %}"> Удалить </a>
+      </div>
+      {% if not forloop.last %}
+        <hr>
+      {% endif %}
     </div>
-    <div>
-      <a href="{% url "birthday:delete" birthday_record.id %}"> Удалить </a>
-    </div>
-    {% if not forloop.last %}
-      <hr>
-    {% endif %}
   </div>
 {% endfor %}
 
