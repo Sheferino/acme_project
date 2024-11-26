@@ -7,6 +7,12 @@
     <div>
       {{birthday_record.first_name}} {{ birthday_record.last_name}}: ДР {{birthday_record.birthday}}
     </div>
+    <div>
+      <a href="{% url "birthday:edit" birthday_record.id %}"> Изменить </a>
+    </div>
+    <div>
+      <a href="{% url "birthday:delete" birthday_record.id %}"> Удалить </a>
+    </div>
     {% if not forloop.last %}
       <hr>
     {% endif %}
