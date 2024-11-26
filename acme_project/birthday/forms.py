@@ -16,6 +16,7 @@ class BirthdayForm(forms.ModelForm):
         return new_first_name
     
     def clean(self):
+        super().clean()
         # Получаем имя и фамилию из очищенных полей формы.
         first_name = self.cleaned_data['first_name']
         last_name = self.cleaned_data['last_name']

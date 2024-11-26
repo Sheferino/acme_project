@@ -10,4 +10,13 @@ class Birthday(models.Model):
     birthday = models.DateField(
         verbose_name='Дата рождения',
         validators=(real_age,)
+    )
+
+    class Meta:
+        verbose_name = 'Запись о ДР'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('first_name', 'last_name'),
+                name='Unique name',
+            ),
         )
