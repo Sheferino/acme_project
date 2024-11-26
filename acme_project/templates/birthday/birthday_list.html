@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for birthday_record in birthday_list %}
+  <div>
+    <div>
+      {{birthday_record.first_name}} {{ birthday_record.last_name}}: ДР {{birthday_record.birthday}}
+    </div>
+    {% if not forloop.last %}
+      <hr>
+    {% endif %}
+  </div>
+{% endfor %}
+
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from .forms import BirthdayForm
-# Импортируем из utils.py функцию для подсчёта дней.
+from .models import Birthday
 from .utils import calculate_birthday_countdown
 
 
@@ -11,11 +11,18 @@ def birthday(request):
     context = {'form': form}
     # Если форма валидна...
     if form.is_valid():
+        form.save()
         # ...вызовем функцию подсчёта дней:
         birthday_countdown = calculate_birthday_countdown(
-            # ...и передаём в неё дату из словаря cleaned_data.
             form.cleaned_data['birthday']
         )
         # Обновляем словарь контекста: добавляем в него новый элемент.
-        context.update({'birthday_countdown': birthday_countdown})
+        context['countdown'] = birthday_countdown
     return render(request, 'birthday/birthday.html', context)
+
+
+def birthday_list(request):
+    template = 'birthday/birthday_list.html'
+    bd_list = Birthday.objects.all().order_by('last_name')
+    context = {'birthday_list': bd_list}
+    return render(request, template, context)

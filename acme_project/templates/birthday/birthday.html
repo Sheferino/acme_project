@@ -11,24 +11,26 @@
       {% csrf_token %}
       {% bootstrap_form form %}
       {% bootstrap_button button_type="submit" content="Отправить" %}
-      </form>
-    </div>
+    </form>
+  </div>
+  {% with data=form.instance %}
+    {% if form.is_valid %}
+      ID новой записи {{ data.id }}
+      <h2>Привет, {{ data.first_name }} {{ data.last_name }}</h2>
+      <!-- Если до дня рождения 0 дней... -->
+      {% if countdown == 0 %}
+        <!-- ...выводим поздравление: -->
+        С днём рождения!
+      <!-- Если до дня рождения не ноль дней... -->
+      {% else %}
+        <!-- ...сообщаем, сколько осталось ждать: -->
+        Осталось дней до дня рождения: {{ countdown }}!
+      {% endif %}
+    {% endif %}
+  {% endwith %}
 </div>
 
 
 
-{% with data=request.POST %}
-  {% if form.is_valid %}
-    <h2>Привет, {{ data.first_name }} {{ data.last_name }}</h2>
-    <!-- Если до дня рождения 0 дней... -->
-    {% if birthday_countdown == 0 %}
-      <!-- ...выводим поздравление: -->
-      С днём рождения!
-    <!-- Если до дня рождения не ноль дней... -->
-    {% else %}
-      <!-- ...сообщаем, сколько осталось ждать: -->
-      Осталось дней до дня рождения: {{ birthday_countdown }}!
-    {% endif %}
-  {% endif %}
-{% endwith %}
+
 {% endblock %}
