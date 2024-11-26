@@ -1,15 +1,23 @@
 {% extends "base.html" %}
+{% load django_bootstrap5 %}
 
 {% block content %}
+<div class="card col-4">
+  <div class="card-header">
+    Калькулятор дней рождения
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% bootstrap_button button_type="submit" content="Отправить" %}
+      </form>
+    </div>
+</div>
 
-<form method="get">
-    <table>
-        {{form }}
-    </table>
-    <input type="submit" value="Отправить">
-</form>
 
-{% with data=request.GET %}
+
+{% with data=request.POST %}
   {% if form.is_valid %}
     <h2>Привет, {{ data.first_name }} {{ data.last_name }}</h2>
     <!-- Если до дня рождения 0 дней... -->
