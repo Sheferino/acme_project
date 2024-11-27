@@ -1,7 +1,9 @@
 asgiref==3.8.1
-Django==3.2.16
+Django==4.2.16
 django-bootstrap5==22.2
+django-debug-toolbar==4.4.6
 Pillow==9.3.0
 pytz==2024.2
 sqlparse==0.5.2
 typing_extensions==4.12.2
+tzdata==2024.2

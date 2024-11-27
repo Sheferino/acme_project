@@ -21,6 +21,12 @@
               Список ДР
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {% if view_name == 'birthday:list_cbw' %} active {% endif %}"
+              href="{% url 'birthday:list_cbw' %}">
+              Список ДР в виде Class-Based view
+            </a>
+          </li>
         </ul>
       {% endwith %}
     </div>
