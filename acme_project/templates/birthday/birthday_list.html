@@ -18,7 +18,13 @@
         <a href="{% url "birthday:edit" birthday_record.id %}"> Изменить </a>
       </div>
       <div>
+        <a href="{% url "birthday:edit_cbv" birthday_record.id %}"> Изменить через CBV </a>
+      </div>
+      <div>
         <a href="{% url "birthday:delete" birthday_record.id %}"> Удалить </a>
+      </div>
+      <div>
+        <a href="{% url "birthday:delete_cbv" birthday_record.id %}"> Удалить через CBV </a>
       </div>
       {% if not forloop.last %}
         <hr>

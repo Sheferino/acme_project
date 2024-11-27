@@ -22,9 +22,15 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if view_name == 'birthday:list_cbw' %} active {% endif %}"
-              href="{% url 'birthday:list_cbw' %}">
+            <a class="nav-link {% if view_name == 'birthday:list_cbv' %} active {% endif %}"
+              href="{% url 'birthday:list_cbv' %}">
               Список ДР в виде Class-Based view
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if view_name == 'birthday:create_cbv' %} active {% endif %}"
+              href="{% url 'birthday:create_cbv' %}">
+              Создание новой записи через Class-Based view
             </a>
           </li>
         </ul>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 from .forms import BirthdayForm
 from .models import Birthday
@@ -11,6 +12,33 @@ class BirthdayListView(ListView):
     model = Birthday
     ordering = 'id'
     paginate_by = 4
+
+
+# миксин для сокращения кода
+class BirthdayMixin:
+    model = Birthday
+    form_class = BirthdayForm
+    template_name = 'birthday/birthday.html'
+    success_url = reverse_lazy('birthday:list_cbv')
+
+
+class BirthdayCreateView(BirthdayMixin, CreateView):
+    ''' этот код не нужн в связи с вводом миксина
+    model = Birthday
+    form_class = BirthdayForm
+    template_name = 'birthday/birthday.html'
+    success_url = reverse_lazy('birthday:list_cbv')'''
+    pass
+
+
+class BirthdayUpdateView(BirthdayMixin, UpdateView):
+    pass
+
+
+class BirthdayDeleteView(DeleteView):
+    model = Birthday
+    template_name = 'birthday/confirm_delete.html'
+    success_url = reverse_lazy('birthday:list_cbv')
 
 
 def birthday(request, pk=None):
