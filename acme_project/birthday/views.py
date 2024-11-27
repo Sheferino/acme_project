@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator
 
 from .forms import BirthdayForm
 from .models import Birthday
@@ -30,7 +31,13 @@ def birthday(request, pk=None):
 def birthday_list(request):
     template = 'birthday/birthday_list.html'
     bd_list = Birthday.objects.all().order_by('last_name')
-    context = {'birthday_list': bd_list}
+    # настраиваем пагинатор
+    paginator = Paginator(bd_list, 3)
+    page_num = request.GET.get('page')
+    page_obj = paginator.get_page(page_num)
+    # готовим данные для передачи в шаблон
+    # отдаём список записей для отображения и объект страницы пагинатора
+    context = {'birthday_list': page_obj, 'page_obj':page_obj}
     return render(request, template, context)
 
 
