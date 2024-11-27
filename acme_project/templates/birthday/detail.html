@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  ID записи: {{ object.id }}
+  <hr>
+  {% if object.image %}
+    <div>
+      <!-- Картинку сделаем побольше, чем на странице list/: высотой 200px -->
+      <img src="{{ object.image.url }}" height="200">
+    </div>
+  {% endif %}
+   <h2>Привет, {{ object.first_name }} {{ object.last_name }}</h2>      
+  {% if countdown == 0 %}
+    <p>С днём рождения!</p>
+  {% else %}
+    <p>Осталось дней до дня рождения: {{ countdown }}!</p>
+  {% endif %}
+{% endblock content %}

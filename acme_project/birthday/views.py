@@ -1,11 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 
 from .forms import BirthdayForm
 from .models import Birthday
 from .utils import calculate_birthday_countdown
+
+
+# миксин для сокращения кода
+class BirthdayMixin:
+    model = Birthday
+    form_class = BirthdayForm
+    template_name = 'birthday/birthday.html'
 
 
 class BirthdayListView(ListView):
@@ -14,21 +21,26 @@ class BirthdayListView(ListView):
     paginate_by = 4
 
 
-# миксин для сокращения кода
-class BirthdayMixin:
+class BirthdayDetailView(DetailView):
     model = Birthday
-    form_class = BirthdayForm
-    template_name = 'birthday/birthday.html'
-    success_url = reverse_lazy('birthday:list_cbv')
+    template_name = 'birthday/detail.html'
+
+    # переопределяем функцию получения контекста,
+    # чтобы в ней рассчитать количество дней до ДР
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['countdown'] = calculate_birthday_countdown(
+            self.object.birthday
+        )
+        return context
 
 
 class BirthdayCreateView(BirthdayMixin, CreateView):
-    ''' этот код не нужн в связи с вводом миксина
+    ''' этот код не нужен в связи с вводом миксина
     model = Birthday
     form_class = BirthdayForm
-    template_name = 'birthday/birthday.html'
-    success_url = reverse_lazy('birthday:list_cbv')'''
-    pass
+    template_name = 'birthday/birthday.html'''
+    success_url = reverse_lazy('birthday:list_cbv')
 
 
 class BirthdayUpdateView(BirthdayMixin, UpdateView):
@@ -72,7 +84,7 @@ def birthday_list(request):
     page_obj = paginator.get_page(page_num)
     # готовим данные для передачи в шаблон
     # отдаём список записей для отображения и объект страницы пагинатора
-    context = {'birthday_list': page_obj, 'page_obj':page_obj}
+    context = {'birthday_list': page_obj, 'page_obj': page_obj}
     return render(request, template, context)
 
 

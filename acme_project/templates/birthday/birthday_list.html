@@ -15,6 +15,9 @@
         {{birthday_record.first_name}} {{ birthday_record.last_name}}: ДР {{birthday_record.birthday}}
       </div>
       <div>
+        <a href="{% url "birthday:detail" birthday_record.id %}"> Детали </a>
+      </div>
+      <div>
         <a href="{% url "birthday:edit" birthday_record.id %}"> Изменить </a>
       </div>
       <div>

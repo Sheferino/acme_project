@@ -9,6 +9,7 @@ urlpatterns = [
     path('birthday_cbv/', views.BirthdayCreateView.as_view(), name='create_cbv'),
     path('list/', views.birthday_list, name='list'),
     path('list_cbv/', views.BirthdayListView.as_view(), name='list_cbv'),
+    path('<int:pk>/', views.BirthdayDetailView.as_view(), name='detail'),
     path('<int:pk>/edit/', views.birthday, name='edit'),
     path('<int:pk>/edit_cbv/', views.BirthdayUpdateView.as_view(), name='edit_cbv'),
     path('<int:pk>/delete/', views.delete_birthday, name='delete'),
