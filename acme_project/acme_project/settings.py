@@ -103,3 +103,5 @@ EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 
 # редирект после авторизации
 LOGIN_REDIRECT_URL = 'birthday:list_cbv'
+# адрес для логина
+LOGIN_URL = 'login' 
