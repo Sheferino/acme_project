@@ -44,6 +44,13 @@ class BirthdayCreateView(LoginRequiredMixin, BirthdayMixin, CreateView):
     template_name = 'birthday/birthday.html'''
     success_url = reverse_lazy('birthday:list_cbv')
 
+    # переопределяем валидация формы для добавления автора записи
+    def form_valid(self, form):
+        # добавляем в экземпляр формы автора
+        form.instance.author = self.request.user
+        # продолжаем валидацию
+        return super().form_valid(form)
+
 
 class BirthdayUpdateView(BirthdayMixin, UpdateView):
     pass
@@ -67,8 +74,13 @@ def birthday(request, pk=None):
     context = {'form': form}
     # Если форма валидна...
     if form.is_valid():
-        form.save()
-        # ...вызовем функцию подсчёта дней:
+        # сохраняем экземпляр формы без сохранения в БД
+        instance = form.save(commit=False)
+        # добавляем в него пользователя
+        instance.author = request.user
+        # сохраняем экземпляр в БД
+        instance.save()
+        # вызоваем функцию подсчёта дней:
         birthday_countdown = calculate_birthday_countdown(
             form.cleaned_data['birthday']
         )
@@ -91,7 +103,7 @@ def birthday_list(request):
 
 
 def delete_birthday(request, pk):
-    # Получаем объект модели или выбрасываем 404 ошибку.
+    # Получаем объект модели или выбрасываем 404 ошибку. Проверяем авторство
     instance = get_object_or_404(Birthday, pk=pk)
     # В форму передаём только объект модели;
     # передавать в форму параметры запроса не нужно.
@@ -99,9 +111,12 @@ def delete_birthday(request, pk):
     context = {'form': form}
     # Если был получен POST-запрос...
     if request.method == 'POST':
-        # ...удаляем объект:
-        instance.delete()
-        # ...и переадресовываем пользователя на страницу со списком записей.
-        return redirect('birthday:list')
+        if instance.author==request.user:
+            # удаляем объект:
+            instance.delete()
+            # и переадресовываем пользователя на страницу со списком записей.
+            return redirect('birthday:list')
+        else:
+            return redirect('registration')
     # Если был получен GET-запрос — отображаем форму.
     return render(request, 'birthday/birthday.html', context)

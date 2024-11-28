@@ -1,6 +1,10 @@
 from django.db import models
 from django.urls import reverse
 from .validators import real_age
+from django.contrib.auth import get_user_model
+
+# получаем модель пользователя. Сделано для возможной смены модели в будущем.
+User = get_user_model()
 
 
 class Birthday(models.Model):
@@ -14,6 +18,8 @@ class Birthday(models.Model):
     )
     image = models.ImageField(blank=True, verbose_name='Фото',
                               upload_to='birtday_images')
+    author = models.ForeignKey(User, verbose_name='Автор записи',
+                               on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = 'Запись о ДР'
@@ -30,4 +36,3 @@ class Birthday(models.Model):
     def get_absolute_url(self):
         # С помощью функции reverse() возвращаем URL объекта.
         return reverse('birthday:detail', kwargs={'pk': self.pk})
-
