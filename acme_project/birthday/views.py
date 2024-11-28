@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import BirthdayForm
 from .models import Birthday
@@ -35,7 +37,7 @@ class BirthdayDetailView(DetailView):
         return context
 
 
-class BirthdayCreateView(BirthdayMixin, CreateView):
+class BirthdayCreateView(LoginRequiredMixin, BirthdayMixin, CreateView):
     ''' этот код не нужен в связи с вводом миксина
     model = Birthday
     form_class = BirthdayForm
@@ -74,7 +76,7 @@ def birthday(request, pk=None):
         context['countdown'] = birthday_countdown
     return render(request, 'birthday/birthday.html', context)
 
-
+@login_required
 def birthday_list(request):
     template = 'birthday/birthday_list.html'
     bd_list = Birthday.objects.all().order_by('last_name')
