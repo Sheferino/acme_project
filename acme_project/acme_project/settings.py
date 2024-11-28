@@ -100,3 +100,6 @@ INTERNAL_IPS = [
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 # Указываем директорию, в которую будут сохраняться файлы писем:
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
+# редирект после авторизации
+LOGIN_REDIRECT_URL = 'birthday:list_cbv'

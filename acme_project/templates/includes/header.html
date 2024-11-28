@@ -2,38 +2,55 @@
   <nav class="navbar shadow-sm">
     <div class="container">
       {% with request.resolver_match.view_name as view_name %}
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <a class="nav-link {% if view_name == 'pages:homepage' %} active {% endif %}"
-              href="{% url 'pages:homepage' %}">
-              Главная
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if view_name == 'birthday:create' %} active {% endif %}"
-              href="{% url 'birthday:create' %}">
-              Калькулятор дней рождения
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if view_name == 'birthday:list' %} active {% endif %}"
-              href="{% url 'birthday:list' %}">
-              Список ДР
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if view_name == 'birthday:list_cbv' %} active {% endif %}"
-              href="{% url 'birthday:list_cbv' %}">
-              Список ДР в виде Class-Based view
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if view_name == 'birthday:create_cbv' %} active {% endif %}"
-              href="{% url 'birthday:create_cbv' %}">
-              Создание новой записи через Class-Based view
-            </a>
-          </li>
-        </ul>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'pages:homepage' %} active {% endif %}"
+            href="{% url 'pages:homepage' %}">
+            Главная
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'birthday:create' %} active {% endif %}"
+            href="{% url 'birthday:create' %}">
+            Калькулятор ДР
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'birthday:list' %} active {% endif %}"
+            href="{% url 'birthday:list' %}">
+            Список ДР
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'birthday:list_cbv' %} active {% endif %}"
+            href="{% url 'birthday:list_cbv' %}">
+            Список ДР в виде CBV
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'birthday:create_cbv' %} active {% endif %}"
+            href="{% url 'birthday:create_cbv' %}">
+            Создание новой записи через CBV
+          </a>
+        </li>
+        
+        
+        <!-- Это блок ссылок для авторизованного пользователя -->
+         {% if user.is_authenticated %}
+        <span class="navbar-text">Пользователь: <b>{{user.username}} </b></span>        
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+        </li>
+        <!-- Конец блока ссылок для авторизованного пользователя -->
+
+        <!-- А здесь блок ссылок для неавторизованного пользователя -->
+         {% else %}
+        <li class="nav-item">
+          <a class="nav-link{% if view_name == 'login' %} active {% endif %}" href="{% url 'login' %}">Войти</a>
+        </li>        
+        <!-- Конец блока ссылок для неавторизованного пользователя -->
+         {% endif %}     
+      </ul>
       {% endwith %}
     </div>
   </nav>
