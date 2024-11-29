@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import BirthdayForm
+from .forms import BirthdayForm, CongratulationForm
 from .models import Birthday
 from .utils import calculate_birthday_countdown
 
@@ -23,7 +23,7 @@ class BirthdayListView(ListView):
     paginate_by = 4
 
 
-class BirthdayDetailView(DetailView):
+class BirthdayDetailView(LoginRequiredMixin, DetailView):
     model = Birthday
     template_name = 'birthday/detail.html'
 
@@ -34,6 +34,15 @@ class BirthdayDetailView(DetailView):
         context['countdown'] = calculate_birthday_countdown(
             self.object.birthday
         )
+
+        # функционал по выводу поздравлений
+        # Записываем в переменную form пустой объект формы.
+        context['congratulation_form'] = CongratulationForm()
+        # получаем все поздравления для выбранного дня рождения.
+        context['congratulations'] = (
+            self.object.congratulations.select_related('author')
+        )
+
         return context
 
 
@@ -121,3 +130,24 @@ def delete_birthday(request, pk):
             return redirect('registration')
     # Если был получен GET-запрос — отображаем форму.
     return render(request, 'birthday/birthday.html', context)
+
+
+# создание нового поздравления
+# POST-запросы только от залогиненных пользователей.
+@login_required
+def add_congratulations(request, pk):
+    # Получаем объект дня рождения или выбрасываем 404 ошибку.
+    birthday = get_object_or_404(Birthday, pk=pk)
+    # Функция должна обрабатывать только POST-запросы.
+    form = CongratulationForm(request.POST)
+    if form.is_valid():
+        # Создаём объект поздравления, но не сохраняем его в БД.
+        congratulation = form.save(commit=False)
+        # В поле author передаём объект автора поздравления.
+        congratulation.author = request.user
+        # В поле birthday передаём объект дня рождения.
+        congratulation.birthday = birthday
+        # Сохраняем объект в БД.
+        congratulation.save()
+    # Перенаправляем пользователя назад, на страницу дня рождения.
+    return redirect('birthday:detail', pk=pk)
