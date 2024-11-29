@@ -19,6 +19,10 @@ class BirthdayMixin:
 
 class BirthdayListView(ListView):
     model = Birthday
+    # по умолчанию класс выполняет запрос queryset = Birthday.objects.all(),
+    # но мы его переопределим для предзагрузки тегов:
+    queryset = Birthday.objects.prefetch_related(
+        'tags').select_related('author')
     ordering = 'id'
     paginate_by = 4
 
