@@ -7,6 +7,18 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+# Личные теги для поздравлений
+class Tag(models.Model):
+    tag = models.CharField(verbose_name='Тег', max_length=20)
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'теги'
+
+    def __str__(self):
+        return f'{self.tag}'
+
+
 class Birthday(models.Model):
     first_name = models.CharField('Имя', max_length=20)
     last_name = models.CharField(
@@ -20,6 +32,12 @@ class Birthday(models.Model):
                               upload_to='birtday_images')
     author = models.ForeignKey(User, verbose_name='Автор записи',
                                on_delete=models.CASCADE, null=True)
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name='Теги',
+        blank=True,
+        help_text='Удерживайте ctrl для выбора нескольких вариантов'
+    )
 
     class Meta:
         verbose_name = 'Запись о ДР'
@@ -38,6 +56,7 @@ class Birthday(models.Model):
         return reverse('birthday:detail', kwargs={'pk': self.pk})
 
 
+# поздравления с ДР
 class Congratulation(models.Model):
     text = models.TextField(verbose_name='Текст поздравления')
     birthday = models.ForeignKey(
