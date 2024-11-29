@@ -88,6 +88,7 @@ def birthday(request, pk=None):
         context['countdown'] = birthday_countdown
     return render(request, 'birthday/birthday.html', context)
 
+
 @login_required
 def birthday_list(request):
     template = 'birthday/birthday_list.html'
@@ -111,7 +112,7 @@ def delete_birthday(request, pk):
     context = {'form': form}
     # Если был получен POST-запрос...
     if request.method == 'POST':
-        if instance.author==request.user:
+        if instance.author == request.user:
             # удаляем объект:
             instance.delete()
             # и переадресовываем пользователя на страницу со списком записей.
