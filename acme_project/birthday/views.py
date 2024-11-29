@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import BirthdayForm, CongratulationForm
-from .models import Birthday
+from .models import Birthday, Congratulation
 from .utils import calculate_birthday_countdown
 
 
@@ -69,6 +69,28 @@ class BirthdayDeleteView(DeleteView):
     model = Birthday
     template_name = 'birthday/confirm_delete.html'
     success_url = reverse_lazy('birthday:list_cbv')
+
+
+# альтернативный вариант создания поздравлений (комментариев) через CBV
+class CongratulationCreateView(LoginRequiredMixin, CreateView):
+    birthday = None
+    model = Congratulation
+    form_class = CongratulationForm
+
+    # Переопределяем dispatch()
+    def dispatch(self, request, *args, **kwargs):
+        self.birthday = get_object_or_404(Birthday, pk=kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    # Переопределяем form_valid()
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.birthday = self.birthday
+        return super().form_valid(form)
+
+    # Переопределяем get_success_url()
+    def get_success_url(self):
+        return reverse('birthday:detail', kwargs={'pk': self.birthday.pk}) 
 
 
 def birthday(request, pk=None):
